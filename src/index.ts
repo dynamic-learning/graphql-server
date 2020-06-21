@@ -67,10 +67,19 @@ const resolvers = {
       },
       workbookViewer: async (root, args) => {
         const filter = {owner: args.owner};
-        let workbooks = await Workbook.find(filter).populate('parentId');
-        const workbookCollections = await WorkbookCollection.find(filter).populate('parentId');
+        let workbooks = await Workbook.find(filter).populate('parentId');        
         workbooks = workbooks.map((workbook) => {
-          return ({...workbook._doc, parentId: workbook.parentId.title});
+          if (workbook.parentId)
+            return ({...workbook._doc, parentId: workbook.parentId.title});
+          else
+            return workbook;
+        });
+        let workbookCollections = await WorkbookCollection.find(filter).populate('parentId');
+        workbookCollections = workbookCollections.map((workbookCollection) => {
+          if (workbookCollection.parentId)
+            return ({...workbookCollection._doc, parentId: workbookCollection.parentId.title});
+          else
+            return workbookCollection;
         });
         console.log(workbooks);
         console.log(workbookCollections);

@@ -130,7 +130,7 @@ const resolvers = {
 
     updateWorkbookSlide: async (root: any, args) => {
       const _id = args.workbookId;
-      const update = { title: args.newSlides};
+      const update = { slides: args.newSlides};
       const options = { new: true, useFindAndModify: false };
       try {
         const workbook = await Workbook.findByIdAndUpdate(_id, update, options);

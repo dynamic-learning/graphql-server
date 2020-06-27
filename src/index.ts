@@ -44,10 +44,10 @@ const typeDefs = gql`
 
   type Mutation {
     createWorkbook(workbook: WorkbookInput): Workbook
-    updateWorkbook(workbookId: ID!, field: String!, value: String!): Workbook
+    updateWorkbook(workbookId: ID!, field: String!, value: String): Workbook
 
     createWorkbookFolder(workbookFolder: WorkbookFolderInput): WorkbookFolder
-    updateWorkbookFolder(workbookFolderId: ID!, field: String!, value: String!): WorkbookFolder
+    updateWorkbookFolder(workbookFolderId: ID!, field: String!, value: String): WorkbookFolder
   }
 `;
 

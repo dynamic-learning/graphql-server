@@ -17,6 +17,7 @@ const typeDefs = gql`
     title: String!
     owner: ID!
     parentId: ID
+    isExpanded: Boolean
   }
 
   type WorkbookViewerItem {
@@ -24,6 +25,7 @@ const typeDefs = gql`
     title: String!
     parentId: String
     type: String
+    isExpanded: Boolean
   }
 
   type Query {
@@ -48,6 +50,7 @@ const typeDefs = gql`
 
     createWorkbookFolder(workbookFolder: WorkbookFolderInput): WorkbookFolder
     updateWorkbookFolder(workbookFolderId: ID!, field: String!, value: String): WorkbookFolder
+    toggleWorkbookFolder(workbookFolderId: ID!, isExpanded: Boolean!): WorkbookFolder
   }
 `;
 
@@ -98,6 +101,19 @@ const resolvers = {
           slides: args.workbook.slides
         }).save();
       } 
+      catch (err) {
+        console.log(err);
+      }
+    },
+
+    toggleWorkbookFolder: async (root, args) => {
+      const update = { isExpanded: args.isExpanded};
+      try {
+        const workbookFolder = await WorkbookFolder.findByIdAndUpdate(args.workbookFolderId, update, { 
+          new: true, useFindAndModify: false 
+        });
+        return workbookFolder;
+      }
       catch (err) {
         console.log(err);
       }

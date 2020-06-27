@@ -14,6 +14,10 @@ const WorkbookFolderSchema = new Schema({
     parentId: {
         type: Schema.Types.ObjectId,
         ref: "workbookfolders"
+    },
+    isExpanded: {
+        type: Boolean,
+        required: false
     }
 });
 

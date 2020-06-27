@@ -17,8 +17,8 @@ const workbookSchema = new Schema({
     },
     parentId: {
         type: Schema.Types.ObjectId,
-        ref: "workbookFolders"
+        ref: "workbookfolders"
     }
 });
 
-module.exports = mongoose.model('workbooks', workbookSchema);
+module.exports = mongoose.model('Workbook', workbookSchema);

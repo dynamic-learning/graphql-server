@@ -17,4 +17,4 @@ const WorkbookFolderSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Workbookfolder', WorkbookFolderSchema, 'workbookfolders'); 
+module.exports = mongoose.model('Workbookfolder', WorkbookFolderSchema); 

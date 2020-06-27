@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server';
 import Workbook from './models/workbooks';
-import WorkbookCollection from './models/workbookCollections';
+import WorkbookFolder from './models/workbookFolders';
 
 const mongoose = require('mongoose');
 const typeDefs = gql`
@@ -12,27 +12,22 @@ const typeDefs = gql`
     slides: String
   }
 
-  type WorkbookCollection {
+  type WorkbookFolder {
     _id: ID!
     title: String!
     owner: ID!
     parentId: ID
   }
 
-  enum WorkbookViewerItemType {
-    WORKBOOK
-    COLLECTION
-  }
-
   type WorkbookViewerItem {
     _id: ID!
     title: String!
     parentId: String
-    type: WorkbookViewerItemType
+    type: String
   }
 
   type Query {
-    getWorkbook(workbookId: ID!): Workbook
+    workbook(workbookId: ID!): Workbook
     workbookViewer(owner: ID!): [WorkbookViewerItem!]!
   }
 
@@ -42,129 +37,121 @@ const typeDefs = gql`
     slides: String!
   }  
 
-  input WorkbookCollectionInput {
+  input WorkbookFolderInput {
     title: String!
     owner: ID!    
   }
 
   type Mutation {
     createWorkbook(workbook: WorkbookInput): Workbook
-    updateWorkbookTitle(workbookId: ID!, newTitle: String!): Workbook
-    updateWorkbookParent(workbookId: ID!, newParentId: ID!): Workbook
-    updateWorkbookSlide(workbookId: ID!, newSlides: String!): Workbook
+    updateWorkbook(workbookId: ID!, field: String!, value: String!): Workbook
 
-    createWorkbookCollection(workbookCollection: WorkbookCollectionInput): WorkbookCollection
-    updateWorkbookCollectionParent(workbookCollectionId: ID!, newParentId: ID!): WorkbookCollection
+    createWorkbookFolder(workbookFolder: WorkbookFolderInput): WorkbookFolder
+    updateWorkbookFolder(workbookFolderId: ID!, field: String!, value: String!): WorkbookFolder
   }
 `;
 
-
 const resolvers = {
   Query: {
-      getWorkbook: async (root, args) => {
+      workbook: async (root, args) => {
         const workbook = await Workbook.findById(args.workbookId);
         return workbook;
       },
       workbookViewer: async (root, args) => {
         const filter = {owner: args.owner};
-        let workbooks = await Workbook.find(filter).populate('parentId');        
-        workbooks = workbooks.map((workbook) => {
-          if (workbook.parentId)
-            return ({...workbook._doc, parentId: workbook.parentId.title});
-          else
-            return workbook;
-        });
-        let workbookCollections = await WorkbookCollection.find(filter).populate('parentId');
-        workbookCollections = workbookCollections.map((workbookCollection) => {
-          if (workbookCollection.parentId)
-            return ({...workbookCollection._doc, parentId: workbookCollection.parentId.title});
-          else
-            return workbookCollection;
-        });
-        console.log(workbooks);
-        console.log(workbookCollections);
-        return [...workbooks, ...workbookCollections];
+        let workbooks, workbookFolders;
+        try {
+          workbooks = await Workbook.find(filter).populate('parentId');
+          console.log(workbooks);
+          workbooks = workbooks.map((workbook) => {
+            return ({...workbook._doc, 
+                    parentId: workbook.parentId ? workbook.parentId._id : "0",
+                    type: "file"
+                  });
+          });
+        } catch (err) {
+          console.log(err);
+        }
+                
+        try {
+          workbookFolders = await WorkbookFolder.find()//.populate('parentId');
+          console.log(workbookFolders);
+          workbookFolders = workbookFolders.map((workbookFolder) => {
+            return ({...workbookFolder._doc, 
+                    parentId: workbookFolder.parentId ? workbookFolder.parentId._id : "0",
+                    type: "folder"
+                  });
+          });   
+        } catch (err) {
+          console.log(err);
+        }
+               
+        return [...workbooks, ...workbookFolders];
       }
   },
   Mutation: {
     createWorkbook: async (root, args) => {
-      const workbook = new Workbook({
-        title: args.workbook.title,
-        owner: args.workbook.owner,
-        slides: args.workbook.slides
-      });
       try {
-        const result = await workbook.save();
-        return result;
+        return await Workbook({
+          title: args.workbook.title,
+          owner: args.workbook.owner,
+          slides: args.workbook.slides
+        }).save();
       } 
       catch (err) {
         console.log(err);
       }
     },
 
-    updateWorkbookTitle: async (root, args) => {
-      const _id = args.workbookId;
-      const update = { title: args.newTitle};
-      const options = { new: true, useFindAndModify: false };
-      try {
-        const workbook = await Workbook.findByIdAndUpdate(_id, update, options);
-        return workbook;
+    updateWorkbook: async (root, args) => {
+      const editableFields = ['title', 'slides', 'parentId'];
+      if (editableFields.includes(args.field)) {
+        const update = {};
+        update[args.field] = args.value;  
+        try {
+          const workbook = await Workbook.findByIdAndUpdate(args.workbookId, update, { 
+            new: true, useFindAndModify: false 
+          });
+          return workbook;
+        }
+        catch (err) {
+          console.log(err);
+        }  
       }
-      catch (err) {
-        console.log(err);
-      }
-    },
-
-    updateWorkbookParent: async (root, args) => {
-      const _id = args.workbookId;
-      const update = { parentId: args.newParentId };
-      const options = { new: true, useFindAndModify: false };
-      try {
-        const workbook = await Workbook.findByIdAndUpdate(_id, update, options);
-        return workbook;
-      }
-      catch (err) {
-        console.log(err);
+      else {       
+        throw new Error(`The field ${args.field} is not editable`);
       }
     },
 
-    updateWorkbookSlide: async (root: any, args) => {
-      const _id = args.workbookId;
-      const update = { slides: args.newSlides};
-      const options = { new: true, useFindAndModify: false };
+    createWorkbookFolder: async (root, args) => {
       try {
-        const workbook = await Workbook.findByIdAndUpdate(_id, update, options);
-        return workbook;
-      }
-      catch (err) {
-        console.log(err);
-      }
-    },
-
-    createWorkbookCollection: async (root, args) => {
-      const workbook = new WorkbookCollection({
-        title: args.workbookCollection.title,
-        owner: args.workbookCollection.owner
-      });
-      try {
-        const result = await workbook.save();
-        return result;
+        return WorkbookFolder({
+          title: args.workbookFolder.title,
+          owner: args.workbookFolder.owner
+        }).save();
       } 
       catch (err) {
         console.log(err);
       }
     },
 
-    updateWorkbookCollectionParent: async (root, args) => {
-      const _id = args.workbookCollectionId;
-      const update = { parentId: args.newParentId};
-      const options = { new: true, useFindAndModify: false };
-      try {
-        const workbookCollection = await WorkbookCollection.findByIdAndUpdate(_id, update, options);
-        return workbookCollection;
+    updateWorkbookFolder: async (root, args) => {
+      const editableFields = ['title', 'parentId'];
+      if (editableFields.includes(args.field)) {
+        const update = {};
+        update[args.field] = args.value;  
+        try {
+          const workbookFolder = await WorkbookFolder.findByIdAndUpdate(args.workbookFolderId, update, { 
+            new: true, useFindAndModify: false 
+          });
+          return workbookFolder;
+        }
+        catch (err) {
+          console.log(err);
+        }  
       }
-      catch (err) {
-        console.log(err);
+      else {       
+        throw new Error(`The field ${args.field} is not editable`);
       }
     }
   }

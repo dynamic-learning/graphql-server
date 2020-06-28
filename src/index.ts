@@ -44,13 +44,19 @@ const typeDefs = gql`
     owner: ID!    
   }
 
+  type DeleteReturnType {
+    success: Boolean!
+  }
+
   type Mutation {
     createWorkbook(workbook: WorkbookInput): Workbook
     updateWorkbook(workbookId: ID!, field: String!, value: String): Workbook
+    deleteWorkbook(workbookId: ID!): DeleteReturnType
 
     createWorkbookFolder(workbookFolder: WorkbookFolderInput): WorkbookFolder
     updateWorkbookFolder(workbookFolderId: ID!, field: String!, value: String): WorkbookFolder
     toggleWorkbookFolder(workbookFolderId: ID!, isExpanded: Boolean!): WorkbookFolder
+    deleteWorkbookFolder(workbookFolderId: ID!): DeleteReturnType
   }
 `;
 
@@ -169,7 +175,33 @@ const resolvers = {
       else {       
         throw new Error(`The field ${args.field} is not editable`);
       }
-    }
+    }, 
+
+    deleteWorkbookFolder: async (root, args) => {      
+      const update = { _id: args.workbookFolderId };
+      console.log(update);
+      try {
+        const workbookFolder = await WorkbookFolder.deleteOne(update);
+        console.log(workbookFolder);
+        return { success: !!workbookFolder };
+      }
+      catch (err) {
+        console.log(err);
+      }
+    },
+    
+    deleteWorkbook: async (root, args) => {      
+      const update = { _id: args.workbookId };
+      console.log(update);
+      try {
+        const workbook = await Workbook.deleteOne(update);
+        console.log(workbook);
+        return { success: !!workbook };
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }    
   }
 }
 

@@ -4,7 +4,7 @@ import WorkbookFolder from "../models/workbookFolders";
 const Mutation = {
   createWorkbook: async (root, args) => {
     try {
-      return await Workbook({
+      return await new Workbook({
         title: args.workbook.title,
         owner: args.workbook.owner,
         slides: args.workbook.slides,
@@ -39,7 +39,7 @@ const Mutation = {
 
   createWorkbookFolder: async (root, args) => {
     try {
-      return WorkbookFolder({
+      return new WorkbookFolder({
         title: args.workbookFolder.title,
         owner: args.workbookFolder.owner,
       }).save();
@@ -73,10 +73,8 @@ const Mutation = {
 
   deleteWorkbookFolder: async (root, args) => {
     const update = { _id: args.workbookFolderId };
-    console.log(update);
     try {
       const workbookFolder = await WorkbookFolder.deleteOne(update);
-      console.log(workbookFolder);
       return { success: !!workbookFolder };
     } catch (err) {
       console.log(err);
@@ -85,10 +83,8 @@ const Mutation = {
 
   deleteWorkbook: async (root, args) => {
     const update = { _id: args.workbookId };
-    console.log(update);
     try {
       const workbook = await Workbook.deleteOne(update);
-      console.log(workbook);
       return { success: !!workbook };
     } catch (err) {
       console.log(err);

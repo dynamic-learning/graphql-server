@@ -11,7 +11,6 @@ const Query = {
     let workbooks, workbookFolders;
     try {
       workbooks = await Workbook.find(filter);
-      console.log(workbooks);
       workbooks = workbooks.map((workbook) => {
         return {
           ...workbook._doc,
@@ -25,7 +24,6 @@ const Query = {
 
     try {
       workbookFolders = await WorkbookFolder.find(filter);
-      console.log(workbookFolders);
       workbookFolders = workbookFolders.map((workbookFolder) => {
         return {
           ...workbookFolder._doc,

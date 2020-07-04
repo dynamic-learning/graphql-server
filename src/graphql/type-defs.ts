@@ -23,9 +23,19 @@ const typeDefs = gql`
     type: String
   }
 
+  type Simulation {
+    _id: ID!
+    owner: String!
+    title: String!
+    description: String
+    tags: [String!]
+    imageURL: String
+  }
+
   type Query {
     workbook(workbookId: ID!): Workbook
     workbookViewer(owner: ID!): [WorkbookViewerItem!]!
+    simulations(keyword: String!): [Simulation!]!
   }
 
   input WorkbookInput {
@@ -43,6 +53,18 @@ const typeDefs = gql`
     success: Boolean!
   }
 
+
+  input SimulationInput {
+    _id: ID!
+    owner: String!
+    title: String!
+    description: String
+    tags: [String!]
+    imageURL: String
+  }
+
+
+
   type Mutation {
     createWorkbook(workbook: WorkbookInput): Workbook
     updateWorkbook(workbookId: ID!, field: String!, value: String): Workbook
@@ -55,6 +77,18 @@ const typeDefs = gql`
       value: String
     ): WorkbookFolder
     deleteWorkbookFolder(workbookFolderId: ID!): DeleteReturnType
+
+    createSimulation(simulation: SimulationInput): Simulation
+    updateSimulation(
+      simulationId: ID!
+      field: String!
+      value: String
+    ): Simulation
+    updateSimulationTags(
+      simulationId: ID!
+      tags: [String!]!
+    ): Simulation
+    deleteSimulation(simulationId: ID!): DeleteReturnType
   }
 `;
 

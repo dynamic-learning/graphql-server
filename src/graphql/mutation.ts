@@ -1,5 +1,6 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
+import Simulation from "../models/simulations";
 
 const Mutation = {
   createWorkbook: async (root, args) => {
@@ -90,6 +91,72 @@ const Mutation = {
       const workbook = await Workbook.deleteOne(update);
       console.log(workbook);
       return { success: !!workbook };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  createSimulation: async (root, args) => {
+    try {
+      return await new Simulation({
+        _id: args.simulation._id,
+        owner: args.simulation.owner,
+        title: args.simulation.title,
+        description: args.simulation.description,
+        tags: args.simulation.tags,
+        imageURL: args.simulation.imageURL,
+      }).save();
+    }
+    catch (err) {
+      console.log(err);
+    }
+  },
+
+  updateSimulation: async (root, args) => {
+    const editableFields = ["title", "description", "imageURL"];
+    if (editableFields.includes(args.field)) {
+      const update = {};
+      update[args.field] = args.value;
+      try {
+        return await Simulation.findByIdAndUpdate(
+          args.simulationId,
+          update,
+          {
+            new: true,
+            useFindAndModify: false,
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      throw new Error(`The field ${args.field} is not editable`);
+    }
+  },
+
+  updateSimulationTags: async (root, args) => {
+    const update = {
+      tags: args.tags
+    };
+    try {
+      return await Simulation.findByIdAndUpdate(
+        args.simulationId,
+        update,
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  deleteSimulation: async (root, args) => {
+    const update = { _id: args.simulationId };
+    try {
+      const simulation = await Simulation.deleteOne(update);
+      return { success: !!simulation.deletedCount };
     } catch (err) {
       console.log(err);
     }

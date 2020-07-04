@@ -1,10 +1,41 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
+import Simulation from "../models/simulations";
 
 const Query = {
   workbook: async (root, args) => {
-    const workbook = await Workbook.findById(args.workbookId);
-    return workbook;
+    return await Workbook.findById(args.workbookId);
+  },
+  simulations: async (root, args) => {
+    const keyword = args.keyword;    
+    const query = {
+      $or : [
+        {
+          title : {
+            $regex: keyword,
+            $options: "i"
+          }
+        },
+        {
+          description: {
+            $regex: keyword,
+            $options: "i"
+          }
+        },
+        {
+          tags: {
+            $regex: keyword,
+            $options: "i"
+          }
+        }  
+      ]
+    }
+    try {
+      return await Simulation.find(query);
+    }
+    catch (err) {
+      console.log(err);
+    }
   },
   workbookViewer: async (root, args) => {
     const filter = { owner: args.owner };

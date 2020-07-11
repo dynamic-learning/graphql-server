@@ -9,11 +9,15 @@ const resolvers = {
   Mutation,
 };
 
-const server = new ApolloServer({
-  cors: { origin: "*", credentials: true },
-  typeDefs,
-  resolvers,
-});
+export const createApolloServer = () => {
+  return new ApolloServer({
+    cors: { origin: "*", credentials: true },
+    typeDefs,
+    resolvers,
+  });
+}
+
+let server = createApolloServer();
 
 const runServer = async () => {
   await connectToMongoose();
@@ -21,7 +25,9 @@ const runServer = async () => {
   console.log(`🚀  Server ready at ${res.url}`);
 };
 
-runServer();
+if(process.env.NODE_ENV !== 'test') {
+  runServer();
+}
 
 process.on("uncaughtException", (err) => {
   console.log("Uncaught exception");

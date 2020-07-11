@@ -14,7 +14,8 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "publish:coverage":"./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.5",

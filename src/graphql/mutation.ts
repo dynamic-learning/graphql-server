@@ -1,6 +1,6 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
-import Simulation from "../models/simulations";
+import Sim from "../models/sims";
 
 const Mutation = {
   createWorkbook: async (root, args) => {
@@ -96,15 +96,15 @@ const Mutation = {
     }
   },
 
-  createSimulation: async (root, args) => {
+  createSim: async (root, args) => {
     try {
-      return await new Simulation({
-        _id: args.simulation._id,
-        owner: args.simulation.owner,
-        title: args.simulation.title,
-        description: args.simulation.description,
-        tags: args.simulation.tags,
-        imageURL: args.simulation.imageURL,
+      return await new Sim({
+        _id: args.sim._id,
+        owner: args.sim.owner,
+        title: args.sim.title,
+        description: args.sim.description,
+        tags: args.sim.tags,
+        imageURL: args.sim.imageURL,
       }).save();
     }
     catch (err) {
@@ -112,35 +112,16 @@ const Mutation = {
     }
   },
 
-  updateSimulation: async (root, args) => {
-    const editableFields = ["title", "description", "imageURL"];
-    if (editableFields.includes(args.field)) {
-      const update = {};
-      update[args.field] = args.value;
-      try {
-        return await Simulation.findByIdAndUpdate(
-          args.simulationId,
-          update,
-          {
-            new: true,
-            useFindAndModify: false,
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      throw new Error(`The field ${args.field} is not editable`);
-    }
-  },
-
-  updateSimulationTags: async (root, args) => {
+  updateSim: async (root, args) => {
     const update = {
-      tags: args.tags
+      title: args.updatedSim.title,
+      description: args.updatedSim.description,
+      tags: args.updatedSim.tags,
+      imageURL: args.updatedSim.imageURL
     };
     try {
-      return await Simulation.findByIdAndUpdate(
-        args.simulationId,
+      return await Sim.findByIdAndUpdate(
+        args.simId,
         update,
         {
           new: true,
@@ -152,11 +133,11 @@ const Mutation = {
     }
   },
 
-  deleteSimulation: async (root, args) => {
-    const update = { _id: args.simulationId };
+  deleteSim: async (root, args) => {
+    const update = { _id: args.simId };
     try {
-      const simulation = await Simulation.deleteOne(update);
-      return { success: !!simulation.deletedCount };
+      const sim = await Sim.deleteOne(update);
+      return { success: !!sim.deletedCount };
     } catch (err) {
       console.log(err);
     }

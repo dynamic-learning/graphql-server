@@ -1,12 +1,12 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
-import Simulation from "../models/simulations";
+import Sim from "../models/sims";
 
 const Query = {
   workbook: async (root, args) => {
     return await Workbook.findById(args.workbookId);
   },
-  simulations: async (root, args) => {
+  sims: async (root, args) => {
     const keyword = args.keyword;    
     const query = {
       $or : [
@@ -31,7 +31,7 @@ const Query = {
       ]
     }
     try {
-      return await Simulation.find(query);
+      return await Sim.find(query);
     }
     catch (err) {
       console.log(err);

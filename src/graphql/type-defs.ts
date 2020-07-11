@@ -23,7 +23,7 @@ const typeDefs = gql`
     type: String
   }
 
-  type Simulation {
+  type Sim {
     _id: ID!
     owner: String!
     title: String!
@@ -35,7 +35,7 @@ const typeDefs = gql`
   type Query {
     workbook(workbookId: ID!): Workbook
     workbookViewer(owner: ID!): [WorkbookViewerItem!]!
-    simulations(keyword: String!): [Simulation!]!
+    sims(keyword: String!): [Sim!]!
   }
 
   input WorkbookInput {
@@ -54,7 +54,7 @@ const typeDefs = gql`
   }
 
 
-  input SimulationInput {
+  input SimInput {
     _id: ID!
     owner: String!
     title: String!
@@ -63,6 +63,12 @@ const typeDefs = gql`
     imageURL: String
   }
 
+  input SimEditableFields {
+    title: String!
+    description: String
+    tags: [String!]
+    imageURL: String
+  }
 
 
   type Mutation {
@@ -78,17 +84,9 @@ const typeDefs = gql`
     ): WorkbookFolder
     deleteWorkbookFolder(workbookFolderId: ID!): DeleteReturnType
 
-    createSimulation(simulation: SimulationInput): Simulation
-    updateSimulation(
-      simulationId: ID!
-      field: String!
-      value: String
-    ): Simulation
-    updateSimulationTags(
-      simulationId: ID!
-      tags: [String!]!
-    ): Simulation
-    deleteSimulation(simulationId: ID!): DeleteReturnType
+    createSim(sim: SimInput): Sim
+    updateSim(simId: ID!, updatedSim: SimEditableFields): Sim
+    deleteSim(simId: ID!): DeleteReturnType
   }
 `;
 

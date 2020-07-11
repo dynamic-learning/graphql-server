@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const simulationSchema = new Schema ({
+const simSchema = new Schema ({
     _id: {
         type: String,
         required: true
@@ -26,4 +26,4 @@ const simulationSchema = new Schema ({
     }
 });
 
-export default mongoose.model("simulation", simulationSchema);
+export default mongoose.model("sim", simSchema);

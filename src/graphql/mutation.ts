@@ -5,7 +5,7 @@ import Sim from "../models/sims";
 const Mutation = {
   createWorkbook: async (root, args) => {
     try {
-      return await Workbook({
+      return await new Workbook({
         title: args.workbook.title,
         owner: args.workbook.owner,
         slides: args.workbook.slides,
@@ -40,7 +40,7 @@ const Mutation = {
 
   createWorkbookFolder: async (root, args) => {
     try {
-      return WorkbookFolder({
+      return new WorkbookFolder({
         title: args.workbookFolder.title,
         owner: args.workbookFolder.owner,
       }).save();

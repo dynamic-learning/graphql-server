@@ -4,4 +4,4 @@
 
 ## Repository for the back end of dynamic learning.
 
-Dynamic learning is a platform where teachers and programmers collaborate to create STEM lessons which make use of interactive visualizataions.
+Dynamic learning is a platform where teachers and programmers collaborate to create STEM lessons which make use of interactive visualizations.

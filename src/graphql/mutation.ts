@@ -1,10 +1,11 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
+import Sim from "../models/sims";
 
 const Mutation = {
   createWorkbook: async (root, args) => {
     try {
-      return await Workbook({
+      return await new Workbook({
         title: args.workbook.title,
         owner: args.workbook.owner,
         slides: args.workbook.slides,
@@ -39,7 +40,7 @@ const Mutation = {
 
   createWorkbookFolder: async (root, args) => {
     try {
-      return WorkbookFolder({
+      return new WorkbookFolder({
         title: args.workbookFolder.title,
         owner: args.workbookFolder.owner,
       }).save();
@@ -90,6 +91,53 @@ const Mutation = {
       const workbook = await Workbook.deleteOne(update);
       console.log(workbook);
       return { success: !!workbook };
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  createSim: async (root, args) => {
+    try {
+      return await new Sim({
+        _id: args.sim._id,
+        owner: args.sim.owner,
+        title: args.sim.title,
+        description: args.sim.description,
+        tags: args.sim.tags,
+        imageURL: args.sim.imageURL,
+      }).save();
+    }
+    catch (err) {
+      console.log(err);
+    }
+  },
+
+  updateSim: async (root, args) => {
+    const update = {
+      title: args.updatedSim.title,
+      description: args.updatedSim.description,
+      tags: args.updatedSim.tags,
+      imageURL: args.updatedSim.imageURL
+    };
+    try {
+      return await Sim.findByIdAndUpdate(
+        args.simId,
+        update,
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  deleteSim: async (root, args) => {
+    const update = { _id: args.simId };
+    try {
+      const sim = await Sim.deleteOne(update);
+      return { success: !!sim.deletedCount };
     } catch (err) {
       console.log(err);
     }

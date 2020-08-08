@@ -1,8 +1,8 @@
 import { ApolloServer } from "apollo-server";
 import Mutation from "./graphql/mutation";
 import Query from "./graphql/query";
-import typeDefs from "./graphql/type-defs";
-import connectToMongoose from "./service/mongoose";
+import typeDefs from "./graphql/typeDefs";
+import connectToMongoose from "./service/db";
 
 const resolvers = {
   Query,

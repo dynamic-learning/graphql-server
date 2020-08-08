@@ -1,6 +1,18 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+
+  type User {
+    _id: ID!
+    email: String!
+    password: String
+  }
+
+  input UserInput {
+    email: String!
+    password: String!
+  }
+
   type Workbook {
     _id: ID!
     title: String!
@@ -53,7 +65,6 @@ const typeDefs = gql`
     success: Boolean!
   }
 
-
   input SimInput {
     _id: ID!
     owner: String!
@@ -87,6 +98,8 @@ const typeDefs = gql`
     createSim(sim: SimInput): Sim
     updateSim(simId: ID!, updatedSim: SimEditableFields): Sim
     deleteSim(simId: ID!): DeleteReturnType
+
+    createUser(userInput: UserInput): User
   }
 `;
 

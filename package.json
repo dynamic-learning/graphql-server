@@ -5,17 +5,19 @@
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.13.1",
+    "bcrypt": "^5.0.0",
     "graphql": "^15.0.0",
     "mongoose": "^5.9.19",
-    "typescript": "^3.9.6",
-    "ts-node": "^8.10.2"
+    "next-auth": "^3.1.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
     "test": "jest --coverage",
-    "publish:coverage":"./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info"
+    "publish:coverage": "./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.5",

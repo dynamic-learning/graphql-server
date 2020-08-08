@@ -1,6 +1,8 @@
 import Workbook from "../models/workbooks";
 import WorkbookFolder from "../models/workbookFolders";
 import Sim from "../models/sims";
+import User from "../models/users";
+import bcrypt from "bcrypt"
 
 const Mutation = {
   createWorkbook: async (root, args) => {
@@ -142,6 +144,27 @@ const Mutation = {
       console.log(err);
     }
   },
+  
+  createUser: async (root, args) => {
+    const user = await User.findOne({ email:args.userInput.email })
+
+    if(user) {
+      throw new Error("User exists already")
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(args.userInput.password, 12)
+      const user = new User({
+        email: args.userInput.email,
+        password: hashedPassword
+      })
+      const res = await user.save()
+      res.set("password", null)
+      return res
+    } catch(err) {
+      console.log(err);
+    }
+  }
 };
 
 export default Mutation;

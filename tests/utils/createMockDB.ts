@@ -1,10 +1,9 @@
-const { createTestClient } = require("apollo-server-testing");
-import { createApolloServer } from "../src/index";
 import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-let server;
+const mongoMemeryServer = new MongoMemoryServer();
 
-const createServerAndMockDB = async (mongoMemeryServer) => {
+const createMockDB = async () => {
   const uri = await mongoMemeryServer.getConnectionString();
 
   const mongooseOpts = {
@@ -15,9 +14,7 @@ const createServerAndMockDB = async (mongoMemeryServer) => {
   };
 
   await mongoose.connect(uri, mongooseOpts);
-
-  server = createApolloServer();
-  return createTestClient(server);
+  return mongoMemeryServer;
 };
 
-export default createServerAndMockDB;
+export default createMockDB;

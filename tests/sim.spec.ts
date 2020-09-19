@@ -12,9 +12,8 @@ let query, mutate, mockServer, mockDB;
 beforeAll(async () => {
   mockDB = await createMockDB();
   mockServer = createMockServer();
-
   const testClient = createTestClient(mockServer);
-
+  process.env.AUTH_KEY = "secret_key";
   query = testClient.query;
   mutate = testClient.mutate;
 });
@@ -30,10 +29,11 @@ describe("Workbooks test", () => {
 
   it("creates a new user", async () => {
     let res = await mutate({
-      mutation: mutations.ADD_USER("test@test.com", "test"),
+      mutation: mutations.ADD_USER("test", "test@test.com", "test"),
     });
     expect(res.data.createUser.email).toEqual("test@test.com");
-    expect(res.data.createUser.password).toEqual(null);
+    expect(res.data.createUser.username).toEqual("test");
+    expect(res.data.createUser.type).toEqual("normal");
   });
 
   it("gives token if valid credentials provided", async () => {

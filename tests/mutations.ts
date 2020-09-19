@@ -79,12 +79,16 @@ export const DELETE_WORKBOOK_FOLDER = (id) => {
   `;
 };
 
-export const ADD_USER = (email, password) => {
+export const ADD_USER = (username, email, password) => {
   return gql`
     mutation {
-      createUser(userInput: { email:"${email}", password:"${password}" }) {
+      createUser(userInput: { email:"${email}", password:"${password}", username:"${username}" }) {
+        userId
+        username
         email
-        password
+        type
+        token
+        tokenExpiration
       }
     }
   `;

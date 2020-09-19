@@ -1,5 +1,6 @@
 import User from "../../models/user";
 import bcrypt from "bcrypt";
+import { getAuthToken } from "../common/user";
 
 export const createUser = async (_root, args) => {
   const user = await User.findOne({ email: args.userInput.email });
@@ -10,9 +11,9 @@ export const createUser = async (_root, args) => {
   const newUser = new User({
     email: args.userInput.email,
     password: hashedPassword,
+    username: args.userInput.username,
     type: "normal",
   });
   const savedUser = await newUser.save();
-  savedUser.set("password", null);
-  return savedUser;
+  return getAuthToken(savedUser);
 };

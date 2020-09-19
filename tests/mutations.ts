@@ -2,9 +2,7 @@ import gql from "graphql-tag";
 
 export const ADD_WORKBOOK = gql`
   mutation {
-    createWorkbook(
-      workbook: { title: "History", owner: "13jnafso34", slides: "slide" }
-    ) {
+    createWorkbook(workbook: { title: "History", slides: "slide" }) {
       _id
       title
       owner
@@ -16,9 +14,7 @@ export const ADD_WORKBOOK = gql`
 
 export const ADD_FOLDER = gql`
   mutation {
-    createWorkbookFolder(
-      workbookFolder: { title: "Social Science", owner: "13jnafso34" }
-    ) {
+    createWorkbookFolder(workbookFolder: { title: "Social Science" }) {
       _id
       title
       owner
@@ -28,7 +24,6 @@ export const ADD_FOLDER = gql`
 `;
 
 export const UPDATE_WORKBOOK = ({ id, field, value }) => {
-
   return gql`
   mutation {
     updateWorkbook(
@@ -57,8 +52,8 @@ export const UPDATE_WORKBOOK_FOLDER = ({ id, field, value }) => {
         parentId
       }
     }
-  `
-}
+  `;
+};
 
 export const DELETE_WORKBOOK = (id) => {
   return gql`
@@ -69,8 +64,8 @@ export const DELETE_WORKBOOK = (id) => {
         success
       }
     }
-  `
-}
+  `;
+};
 
 export const DELETE_WORKBOOK_FOLDER = (id) => {
   return gql`
@@ -81,5 +76,59 @@ export const DELETE_WORKBOOK_FOLDER = (id) => {
         success
       }
     }
-  `
-}
+  `;
+};
+
+export const ADD_USER = (email, password) => {
+  return gql`
+    mutation {
+      createUser(userInput: { email:"${email}", password:"${password}" }) {
+        email
+        password
+      }
+    }
+  `;
+};
+
+export const ADDSIM = (id, title, description, tags, imgUrl) => {
+  return gql`
+    mutation {
+      createSim(sim: {
+        _id: "${id}",
+        title: "${title}",
+        description: "${description}",
+        tags: "${tags}",
+        imageURL: "${imgUrl}"
+      }) {
+        _id
+        owner
+      }
+  }
+  `;
+};
+
+export const UPDATE_SIM = (simId, title, description, tags, imgUrl) => {
+  return gql`
+    mutation {
+      updateSim(simId:"${simId}",updatedSim: {
+        title:"${title}",
+        description:"${description}",
+        tags:"${tags}",
+        imageURL:"${imgUrl}"
+      }) {
+        _id
+        title
+      }
+    }
+  `;
+};
+
+export const DELETE_SIM = (simId) => {
+  return gql`
+    mutation {
+      deleteSim(simId: "${simId}") {
+        success
+      }
+    }
+  `;
+};

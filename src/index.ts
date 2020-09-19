@@ -2,8 +2,7 @@ import { ApolloServer } from "apollo-server";
 import Mutation from "./graphql/mutation";
 import Query from "./graphql/query";
 import typeDefs from "./graphql/type-defs";
-import connectToMongoose from "./service/db";
-import context from "./graphql/context";
+import connectToMongoose from "./service/mongoose";
 
 const resolvers = {
   Query,
@@ -15,9 +14,8 @@ export const createApolloServer = () => {
     cors: { origin: "*", credentials: true },
     typeDefs,
     resolvers,
-    context,
   });
-};
+}
 
 let server = createApolloServer();
 
@@ -27,7 +25,7 @@ const runServer = async () => {
   console.log(`🚀  Server ready at ${res.url}`);
 };
 
-if (process.env.NODE_ENV !== "test") {
+if(process.env.NODE_ENV !== 'test') {
   runServer();
 }
 

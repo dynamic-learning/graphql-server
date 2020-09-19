@@ -1,5 +1,6 @@
 import User from "../../models/user";
-import jwt from "jsonwebtoken";
+import { getAuthToken } from "../common/user";
+
 import bcrypt from "bcrypt";
 
 export const login = async (_root, args) => {
@@ -14,21 +15,5 @@ export const login = async (_root, args) => {
   if (!isPasswordEqual) {
     throw new Error("Password is incorrect!");
   }
-  const token = jwt.sign(
-    {
-      userId: user.get("id"),
-      email: user.get("email"),
-      type: user.get("type"),
-    },
-    process.env.AUTH_KEY!,
-    {
-      expiresIn: "1h",
-    }
-  );
-  return {
-    userId: user.get("id"),
-    token,
-    tokenExpiration: 1,
-    type: user.get("type"),
-  };
+  return getAuthToken(user);
 };

@@ -9,6 +9,7 @@ const userType = `
     input UserInput {
         email: String!
         password: String!
+        username: String!
     }
 
     type AuthData {
@@ -16,6 +17,8 @@ const userType = `
         token: String!
         tokenExpiration: Int!
         type: String!
+        username: String!
+        email:String!
     }
 `;
 export default userType;

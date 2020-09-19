@@ -16,7 +16,7 @@ const mutationType = `
         updateSim(simId: ID!, updatedSim: SimEditableFields): Sim
         deleteSim(simId: ID!): DeleteReturnType
             
-        createUser(userInput: UserInput): User
+        createUser(userInput: UserInput): AuthData!
     }
 `;
 

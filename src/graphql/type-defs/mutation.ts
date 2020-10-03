@@ -17,6 +17,8 @@ const mutationType = `
         deleteSim(simId: ID!): DeleteReturnType
             
         createUser(userInput: UserInput): AuthData!
+        loginWithGithub(code: String!): AuthData!
+        loginWithGoogle(idToken: String!): AuthData!
     }
 `;
 

@@ -4,6 +4,7 @@ const queryType = `
         workbookViewer: [WorkbookViewerItem!]!
         sims(keyword: String!): [Sim!]!
         login(email: String!, password: String!): AuthData!
+        currentUser: User
     }
 `;
 

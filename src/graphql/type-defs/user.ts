@@ -4,6 +4,7 @@ const userType = `
         email: String!
         password: String
         type: String!
+        username: String!
     }
 
     input UserInput {

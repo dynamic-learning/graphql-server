@@ -17,3 +17,16 @@ export const login = async (_root, args) => {
   }
   return getAuthToken(user);
 };
+
+export const currentUser = async (_root, _args, context) => {
+  const { user } = context;
+
+  if (!user) {
+    throw new Error("User is not authenticated");
+  }
+
+  return {
+    _id: user.userId,
+    username: user.username
+  };
+};

@@ -94,7 +94,7 @@ export const ADD_USER = (username, email, password) => {
   `;
 };
 
-export const ADDSIM = (id, title, description, tags, imgUrl) => {
+export const ADDSIM = (id, title, description, tags, imgUrl, owner) => {
   return gql`
     mutation {
       createSim(sim: {
@@ -102,7 +102,8 @@ export const ADDSIM = (id, title, description, tags, imgUrl) => {
         title: "${title}",
         description: "${description}",
         tags: "${tags}",
-        imageURL: "${imgUrl}"
+        imageURL: "${imgUrl}",
+        owner:"${owner}"
       }) {
         _id
         owner

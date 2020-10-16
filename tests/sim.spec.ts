@@ -54,7 +54,8 @@ describe("Workbooks test", () => {
         "sim-1",
         "desc-1",
         ["science", "math"],
-        "imgUrl"
+        "imgUrl",
+        "owner"
       ),
     });
     expect(res.errors).toBeFalsy();
@@ -68,7 +69,8 @@ describe("Workbooks test", () => {
         "sim-1",
         "desc-1",
         ["science", "math"],
-        "imgUrl"
+        "imgUrl",
+        "owner"
       ),
     });
     expect(res.errors).toBeTruthy();

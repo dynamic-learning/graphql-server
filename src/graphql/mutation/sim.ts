@@ -14,7 +14,7 @@ export const createSim = async (_root, args, context) => {
   try {
     return await new Sim({
       _id: args.sim._id,
-      owner: user.userId,
+      owner: args.sim.owner,
       title: args.sim.title,
       description: args.sim.description,
       tags: args.sim.tags,

@@ -14,6 +14,7 @@ const simType = `
         description: String
         tags: [String!]
         imageURL: String
+        owner: String!
     }
 
     input SimEditableFields {

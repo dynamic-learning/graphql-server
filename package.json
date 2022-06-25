@@ -10,7 +10,7 @@
     "graphql": "^15.3.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
